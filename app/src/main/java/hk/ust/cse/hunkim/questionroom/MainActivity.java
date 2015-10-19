@@ -25,7 +25,7 @@ import hk.ust.cse.hunkim.questionroom.question.Question;
 public class MainActivity extends ListActivity {
 
     // TODO: change this to your own Firebase URL
-    private static final String FIREBASE_URL = "https://classquestion.firebaseio.com/";
+    private static final String FIREBASE_URL = "https://intense-inferno-7677.firebaseio.com/";
 
     private String roomName;
     private Firebase mFirebaseRef;
@@ -62,6 +62,7 @@ public class MainActivity extends ListActivity {
         mFirebaseRef = new Firebase(FIREBASE_URL).child(roomName).child("questions");
 
         // Setup our input methods. Enter key on the keyboard or pushing the send button
+//        EditText inputTitle = (EditText) findViewById(R.id.messageInput);
         EditText inputText = (EditText) findViewById(R.id.messageInput);
         inputText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -132,13 +133,18 @@ public class MainActivity extends ListActivity {
     }
 
     private void sendMessage() {
+        EditText titleText = (EditText) findViewById(R.id.titleInput);
         EditText inputText = (EditText) findViewById(R.id.messageInput);
+        String title = titleText.getText().toString();
         String input = inputText.getText().toString();
         if (!input.equals("")) {
             // Create our 'model', a Chat object
-            Question question = new Question(input);
+            Question question = new Question(title,input);
+//            Log.d("myTag", "This is my message");
             // Create a new, auto-generated child of that chat location, and save our chat data there
+//            Log.d("myTag", "wholeMsg :" + question.getWholeMsg() + "\n desc: " + question.getDesc() + "\n head: " + question.getHead());
             mFirebaseRef.push().setValue(question);
+            titleText.setText("");
             inputText.setText("");
         }
     }

@@ -1,6 +1,7 @@
 package hk.ust.cse.hunkim.questionroom.question;
 
 import java.util.Date;
+import android.util.Log;
 
 /**
  * Created by hunkim on 7/16/15.
@@ -45,19 +46,22 @@ public class Question implements Comparable<Question> {
      * Set question from a String message
      * @param message string message
      */
-    public Question(String message) {
-        this.wholeMsg = message;
+    public Question(String title, String message) {
+        this.wholeMsg = title + " " + message;
         this.echo = 0;
-        this.head = getFirstSentence(message).trim();
-        this.desc = "";
-        if (this.head.length() < message.length()) {
-            this.desc = message.substring(this.head.length());
-        }
+        this.head = title;
+        this.desc = message;
+//        Log.d("myTag", "We are here");
+//        if (this.head.length() < message.length()) {
+//            this.desc = message.substring(this.head.length());
+//        }
 
         // get the last char
         this.headLastChar = head.substring(head.length() - 1);
 
         this.timestamp = new Date().getTime();
+
+//            Log.d("myTag", "wholeMsg :" + this.wholeMsg + "\n desc: " + this.desc + "\n head: " + this.head);
     }
 
     /**
