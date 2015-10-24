@@ -51,17 +51,12 @@ public class Question implements Comparable<Question> {
         this.echo = 0;
         this.head = title;
         this.desc = message;
-//        Log.d("myTag", "We are here");
-//        if (this.head.length() < message.length()) {
-//            this.desc = message.substring(this.head.length());
-//        }
 
         // get the last char
         this.headLastChar = head.substring(head.length() - 1);
 
         this.timestamp = new Date().getTime();
 
-//            Log.d("myTag", "wholeMsg :" + this.wholeMsg + "\n desc: " + this.desc + "\n head: " + this.head);
     }
 
     /**
