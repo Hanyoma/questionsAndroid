@@ -24,7 +24,7 @@ import hk.ust.cse.hunkim.questionroom.db.DBUtil;
 import hk.ust.cse.hunkim.questionroom.question.Question;
 
 public class MainActivity extends ListActivity {
-    
+
     // TODO: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://intense-inferno-7677.firebaseio.com/";
 
@@ -140,6 +140,7 @@ public class MainActivity extends ListActivity {
         if (!input.equals("")) {
             // "Sanitize" the input, removing HTML tags.
             input = Html.fromHtml(input).toString();
+            title = Html.fromHtml(title).toString();
             // Create our 'model', a Chat object
             Question question = new Question(title,input);
             // Create a new, auto-generated child of that chat location, and save our chat data there
