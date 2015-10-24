@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,8 +24,8 @@ import hk.ust.cse.hunkim.questionroom.db.DBUtil;
 import hk.ust.cse.hunkim.questionroom.question.Question;
 
 public class MainActivity extends ListActivity {
-
-    // DONE: change this to your own Firebase URL
+    
+    // TODO: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://intense-inferno-7677.firebaseio.com/";
 
     private String roomName;
@@ -137,6 +138,8 @@ public class MainActivity extends ListActivity {
         String title = titleText.getText().toString();
         String input = inputText.getText().toString();
         if (!input.equals("")) {
+            // "Sanitize" the input, removing HTML tags.
+            input = Html.fromHtml(input).toString();
             // Create our 'model', a Chat object
             Question question = new Question(title,input);
             // Create a new, auto-generated child of that chat location, and save our chat data there
