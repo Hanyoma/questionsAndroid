@@ -12,6 +12,13 @@ import com.firebase.client.Query;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
+
+
 
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
 import hk.ust.cse.hunkim.questionroom.question.Question;
@@ -77,7 +84,15 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
             msgString += "<font color=red>NEW </font>";
         }
 
-        msgString += "<B>" + question.getHead() + "</B>" + question.getDesc();
+        // Display post time
+        Calendar calendar = Calendar.getInstance();
+        TimeZone obj = calendar.getTimeZone();
+        DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        formatter.setTimeZone(obj);
+
+        String time = formatter.format(question.getTimestamp());
+
+        msgString += "<B>" + question.getHead() + "</B>" + question.getDesc() + "<br>"+ time;
 
         ((TextView) view.findViewById(R.id.head_desc)).setText(Html.fromHtml(msgString));
         view.setOnClickListener(new View.OnClickListener() {
