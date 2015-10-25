@@ -27,7 +27,7 @@ public class MainActivity extends ListActivity {
 
     // TODO: change this to your own Firebase URL
 
-    private static final String FIREBASE_URL = "https://intense-inferno-7677.firebaseio.com/";
+    private static final String FIREBASE_URL = "https://intense-inferno-7677.firebaseIO.com/";
 
     //private static final String FIREBASE_URL = "https://vivid-inferno-237.firebaseIO.com";
 
