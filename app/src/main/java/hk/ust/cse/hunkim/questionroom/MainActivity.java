@@ -25,8 +25,7 @@ import hk.ust.cse.hunkim.questionroom.question.Question;
 
 public class MainActivity extends ListActivity {
 
-    // TODO: change this to your own Firebase URL
-
+    // DONE: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://intense-inferno-7677.firebaseIO.com/";
 
     //private static final String FIREBASE_URL = "https://vivid-inferno-237.firebaseIO.com";
@@ -136,19 +135,26 @@ public class MainActivity extends ListActivity {
         mChatListAdapter.cleanup();
     }
 
+    // Gets the text from the two input fields as submits a new question entry to the firebase
     private void sendMessage() {
+        // Get text from the two inputs field as Strings
         EditText titleText = (EditText) findViewById(R.id.titleInput);
         EditText inputText = (EditText) findViewById(R.id.messageInput);
         String title = titleText.getText().toString();
         String input = inputText.getText().toString();
-        if (!input.equals("")) {
+
+        if (!title.equals("") && !input.equals("")) { // Only actually submit the question if it has a title and a main text.
             // "Sanitize" the input, removing HTML tags.
             input = Html.fromHtml(input).toString();
             title = Html.fromHtml(title).toString();
-            // Create our 'model', a Chat object
+
+            // Create corresponding Question object
             Question question = new Question(title,input);
+
             // Create a new, auto-generated child of that chat location, and save our chat data there
             mFirebaseRef.push().setValue(question);
+
+            // Clear the two input fields since this question has been successfully submitted
             titleText.setText("");
             inputText.setText("");
         }
