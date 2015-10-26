@@ -87,7 +87,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         // Display post time
         Calendar calendar = Calendar.getInstance();
         TimeZone obj = calendar.getTimeZone();
-        DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        DateFormat formatter = new SimpleDateFormat("EEE MMM d, yyyy h:mm a");
         formatter.setTimeZone(obj);
 
         String time = formatter.format(question.getTimestamp());
