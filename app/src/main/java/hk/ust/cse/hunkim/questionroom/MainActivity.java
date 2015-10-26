@@ -114,12 +114,13 @@ public class MainActivity extends ListActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 boolean connected = (Boolean) dataSnapshot.getValue();
-                if (connected) {
-                    // MARC: I decided to comment this out since it does not provide any information to the user. Only the unsuccessful toast actually is useful.
+
+                // MARC: I decided to take out the toast message concerning the firebase connection. It causes more confusion than it actually helps since at every start it shows disconnected and then connected.
+//                if (connected) {
 //                    Toast.makeText(MainActivity.this, "Connected to Firebase", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Disconnected from Firebase", Toast.LENGTH_SHORT).show();
-                }
+//                } else {
+//                    Toast.makeText(MainActivity.this, "Disconnected from Firebase", Toast.LENGTH_SHORT).show();
+//                }
             }
 
             @Override
