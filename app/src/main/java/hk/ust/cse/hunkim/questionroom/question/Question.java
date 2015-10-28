@@ -1,6 +1,8 @@
 package hk.ust.cse.hunkim.questionroom.question;
 
 import java.util.Date;
+
+import android.text.Html;
 import android.util.Log;
 
 /**
@@ -47,6 +49,9 @@ public class Question implements Comparable<Question> {
      * @param message string message
      */
     public Question(String title, String message) {
+        // "Sanitize" the input, escaping HTML sequences.
+        title = Html.escapeHtml(title);
+        message = Html.escapeHtml(message);
         this.wholeMsg = title + " " + message;
         this.echo = 0;
         this.head = title;

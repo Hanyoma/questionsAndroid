@@ -1,6 +1,7 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.test.suitebuilder.annotation.SmallTest;
+import android.text.Html;
 
 import junit.framework.TestCase;
 
@@ -40,7 +41,15 @@ public class QuestionTest  extends TestCase {
     @SmallTest
 
     public void testHead() {
-        assertEquals("Head", "Hello?", q.getHead());
+        assertEquals("Head", "The title is this", q.getHead());
+    }
+
+    public void testSanitation()
+    {
+        // Checks that new questions inputs are automatically sanitized.
+        Question htmlQ = new Question("<h1> Title </h1>", "and the <p> description </p>");
+        assertEquals("HTMLSanitation", htmlQ.getHead(), Html.escapeHtml("<h1> Title </h1>"));
+        assertEquals("HTMLSanitationDesc", htmlQ.getDesc(), Html.escapeHtml("and the <p> description </p>"));
     }
 
 }

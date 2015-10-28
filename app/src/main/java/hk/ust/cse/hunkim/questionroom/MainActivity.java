@@ -146,10 +146,6 @@ public class MainActivity extends ListActivity {
         String input = inputText.getText().toString();
 
         if (!title.equals("") && !input.equals("")) { // Only actually submit the question if it has a title and a main text.
-            // "Sanitize" the input, removing HTML tags.
-            input = Html.escapeHtml(input);
-            title = Html.escapeHtml(title);
-
             // Create corresponding Question object
             Question question = new Question(title,input);
 
