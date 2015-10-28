@@ -211,4 +211,6 @@ public class MainActivity extends ListActivity {
     public void Close(View view) {
         finish();
     }
+
+    public Firebase getFirebaseRef() {return mFirebaseRef;}
 }
