@@ -92,7 +92,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
         String time = formatter.format(question.getTimestamp());
 
-        msgString += "<B>" + question.getHead() + "</B>" + " " + question.getDesc() + "<br>"+ time;
+        msgString += "<B>" + question.getHead() + "</B><br>" + " " + question.getDesc() + "<br>"+ time+"<br>";
 
         ((TextView) view.findViewById(R.id.head_desc)).setText(Html.fromHtml(msgString));
         view.setOnClickListener(new View.OnClickListener() {
