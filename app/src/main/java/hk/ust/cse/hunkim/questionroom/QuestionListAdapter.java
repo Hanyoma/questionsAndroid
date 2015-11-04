@@ -99,7 +99,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
                                     @Override
                                     public void onClick(View view) {
                                         MainActivity m = (MainActivity) view.getContext();
-                                        m.updateEcho((String) view.getTag());
+                                        m.postWasClicked((String) view.getTag());
                                     }
                                 }
 

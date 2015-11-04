@@ -24,12 +24,10 @@ import hk.ust.cse.hunkim.questionroom.db.DBUtil;
 import hk.ust.cse.hunkim.questionroom.question.Question;
 
 public class MainActivity extends ListActivity {
-
-    // DONE: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://intense-inferno-7677.firebaseIO.com/";
 
-    //private static final String FIREBASE_URL = "https://vivid-inferno-237.firebaseIO.com";
-
+    public static final String ROOM_NAME = "Room_name";
+    public static final String QUESTION_KEY = "Question_key";
 
     private String roomName;
     private Firebase mFirebaseRef;
@@ -44,6 +42,8 @@ public class MainActivity extends ListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("devDebugLog", "MainActivity's onCreate.");
+
         super.onCreate(savedInstanceState);
 
         //initialized once with an Android context.
@@ -91,6 +91,7 @@ public class MainActivity extends ListActivity {
 
     @Override
     public void onStart() {
+        Log.i("devDebugLog", "MainActivity's onStart.");
         super.onStart();
 
         // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
@@ -157,6 +158,17 @@ public class MainActivity extends ListActivity {
             inputText.setText("");
         }
     }
+    public void postWasClicked(String key)
+    {
+        Log.i("devDebugLog", "A post was clicked.");
+
+        // Start activity that shows this post alone.
+        Intent intent = new Intent(this, ExpandedQuestionActivity.class);
+        intent.putExtra(ROOM_NAME, roomName);
+        intent.putExtra(QUESTION_KEY, key);
+        startActivity(intent);
+    }
+
 
     public void updateEcho(String key) {
         if (dbutil.contains(key)) {
