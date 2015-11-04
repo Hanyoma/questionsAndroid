@@ -8,7 +8,7 @@ import android.util.Log;
 /**
  * Created by marc on 03-Nov-15.
  */
-public class QuestionReply {
+public class QuestionReply implements Comparable<QuestionReply> {
 
     /**
      * Must be synced with firebase JSON structure
@@ -64,6 +64,11 @@ public class QuestionReply {
         this.key = key;
     }
 
+    @Override
+    public int compareTo(QuestionReply other) {
+        // Dummy. We won't be using this.
+        return 0;
+    }
 
     @Override
     public int hashCode() {

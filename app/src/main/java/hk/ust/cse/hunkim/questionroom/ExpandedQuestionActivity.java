@@ -48,7 +48,7 @@ public class ExpandedQuestionActivity extends ListActivity {
     private String mainQuestionMsgString;
     private Firebase mFirebaseRef;
     private ValueEventListener mConnectedListener;
-    private QuestionListAdapter mChatListAdapter;
+    private QuestionReplyListAdapter mChatListAdapter;
 
     private DBUtil dbutil;
 
@@ -113,6 +113,26 @@ public class ExpandedQuestionActivity extends ListActivity {
     public void onStart() {
         Log.i("devDebugLog", "ExpandedQuestionActivity's onStart.");
         super.onStart();
+
+
+        // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
+        final ListView listView = getListView();
+        // Tell our list adapter that we only want 200 messages at a time
+        mChatListAdapter = new QuestionReplyListAdapter(
+                mFirebaseRef.child("replies").orderByChild("timestamp").limitToFirst(200),
+                this, R.layout.question_reply, roomName);
+        listView.setAdapter(mChatListAdapter);
+
+        mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                listView.setSelection(mChatListAdapter.getCount() - 1);
+            }
+        });
+
+        Log.i("devDebugLog", "HERE");
+
 
 //        final TextView textView = getTextView();
 //        mainQuestionMsgString += "<B>" + question.getHead() + "</B><br>" + " " + question.getDesc() + "<br>"+ time+"<br>";
