@@ -93,7 +93,17 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
         String time = formatter.format(question.getTimestamp());
 
-        msgString += "<B>" + question.getHead() + "</B><br>" + " " + question.getDesc() + "<br>"+ time+"<br>";
+        String repliesString;
+        if (question.getNumberOfReplies() == 1)
+        {
+            repliesString = " reply";
+        }
+        else
+        {
+            repliesString = " replies";
+        }
+
+        msgString += "<B>" + question.getHead() + "</B><br>" + " " + question.getDesc() + "<br>" + time + "<br>" + question.getNumberOfReplies() +  repliesString + "<br>";
 
         ((TextView) view.findViewById(R.id.head_desc)).setText(Html.fromHtml(msgString));
         view.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +121,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
         echoButton.setClickable(clickable);
         echoButton.setEnabled(clickable);
-        view.setClickable(clickable);
+//        view.setClickable(clickable); // If this line is here we cannot click a question anymore to open a post to see the replies.
 
 
         // http://stackoverflow.com/questions/8743120/how-to-grey-out-a-button

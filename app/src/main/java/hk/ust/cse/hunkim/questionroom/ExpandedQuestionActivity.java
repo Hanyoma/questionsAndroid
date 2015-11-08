@@ -3,12 +3,15 @@ package hk.ust.cse.hunkim.questionroom;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -154,7 +157,7 @@ public class ExpandedQuestionActivity extends ListActivity {
 //                Log.i("devDebugLog", "onChildAdded: " + dataSnapshot.toString());
 
 
-                // This is too hacky: We know that wholeMsg will be the last element, so then we will have all elements in our thisQuestion hashmap.
+                // TODO: This is too hacky: We know that wholeMsg will be the last element, so then we will have all elements in our thisQuestion hashmap.
                 if (dataSnapshot.getKey().equals("wholeMsg")) {
                     Calendar calendar = Calendar.getInstance();
                     TimeZone obj = calendar.getTimeZone();
@@ -163,6 +166,32 @@ public class ExpandedQuestionActivity extends ListActivity {
                     String time = formatter.format(thisQuestion.get("timestamp"));
                     String msgString = "<B>" + thisQuestion.get("head") + "</B><br>" + " " + thisQuestion.get("desc") + "<br>" + time + "<br>";
                     ((TextView) findViewById(R.id.head_desc)).setText(Html.fromHtml(msgString));
+
+
+                    // Set the echo value
+                    int echo = Integer.parseInt("" + thisQuestion.get("echo")); // Hacky....
+                    Button echoButton = (Button) findViewById(R.id.echo);
+                    echoButton.setText("" + echo);
+                    echoButton.setTextColor(Color.BLUE);
+
+                    // Make echo button red if already liked
+//                    boolean clickable = !dbutil.contains(question.getKey());
+//
+//                    echoButton.setClickable(clickable);
+//                    echoButton.setEnabled(clickable);
+////        view.setClickable(clickable); // If this line is here we cannot click a question anymore to open a post to see the replies.
+//
+//
+//                    // http://stackoverflow.com/questions/8743120/how-to-grey-out-a-button
+//                    // grey out our button
+//                    if (clickable) {
+//                        echoButton.getBackground().setColorFilter(null);
+//                    } else {
+//                        echoButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+//                    }
+//
+//
+//                    view.setTag(question.getKey());  // store key in the view
                 }
 
 
@@ -216,8 +245,7 @@ public class ExpandedQuestionActivity extends ListActivity {
 
     // Gets the text from the two input fields as submits a new question entry to the firebase
     private void sendMessage() {
-        // Get text from the two inputs field as Strings
-
+        // Get text from the input field as String
         EditText replyInput = (EditText) findViewById(R.id.replyInput);
         String replyText = replyInput.getText().toString();
 
@@ -230,7 +258,30 @@ public class ExpandedQuestionActivity extends ListActivity {
 
             // Clear the two input fields since this question has been successfully submitted
             replyInput.setText("");
+
+            // Increment the number of replies variable of this question
+            incrementReplyCount();
         }
+    }
+
+    public void incrementReplyCount() {
+        final Firebase repliesCountRef = mFirebaseRef.child("numberOfReplies");
+        repliesCountRef.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        Long repliesValue = (Long) dataSnapshot.getValue();
+
+                        repliesCountRef.setValue(repliesValue + 1);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                }
+        );
     }
 
     public void Close(View view) {
@@ -238,7 +289,7 @@ public class ExpandedQuestionActivity extends ListActivity {
     }
 
 
-    // This method will be called when somewthing is added or changed in the firebase data entry.
+    // This method will be called when something is added or changed in the firebase data entry.
     private void handleAddedOrChangedReplies(DataSnapshot dataSnapshot) {
 
         Iterator it = ((Map) dataSnapshot.getValue()).entrySet().iterator();

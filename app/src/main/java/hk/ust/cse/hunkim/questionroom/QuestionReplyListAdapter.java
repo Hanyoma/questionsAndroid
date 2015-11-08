@@ -24,13 +24,7 @@ import hk.ust.cse.hunkim.questionroom.db.DBUtil;
 import hk.ust.cse.hunkim.questionroom.question.Question;
 import hk.ust.cse.hunkim.questionroom.question.QuestionReply;
 
-/**
- * @author greg
- * @since 6/21/13
- * <p/>
- * This class is an example of how to use FirebaseListAdapter. It uses the <code>Chat</code> class to encapsulate the
- * data for each individual chat message
- */
+
 public class QuestionReplyListAdapter extends FirebaseListAdapter<QuestionReply> {
 
     // The mUsername for this client. We use this to indicate which messages originated from this user
@@ -50,33 +44,6 @@ public class QuestionReplyListAdapter extends FirebaseListAdapter<QuestionReply>
     protected void populateView(View view, QuestionReply questionReply) {
         DBUtil dbUtil = activity.getDbutil();
 
-        // Map a Chat object to an entry in our listview
-//        int echo = question.getEcho();
-//        Button echoButton = (Button) view.findViewById(R.id.echo);
-//        echoButton.setText("" + echo);
-//        echoButton.setTextColor(Color.BLUE);
-
-
-//        echoButton.setTag(question.getKey()); // Set tag for button
-
-//        echoButton.setOnClickListener(
-//                new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        MainActivity m = (MainActivity) view.getContext();
-//                        m.updateEcho((String) view.getTag());
-//                    }
-//                }
-//
-//        );
-//
-//        String msgString = "";
-//
-//        question.updateNewQuestion();
-//        if (question.isNewQuestion()) {
-//            msgString += "<font color=red>NEW </font>";
-//        }
-
         // Display post time
         Calendar calendar = Calendar.getInstance();
         TimeZone obj = calendar.getTimeZone();
@@ -88,6 +55,7 @@ public class QuestionReplyListAdapter extends FirebaseListAdapter<QuestionReply>
         String msgString = questionReply.getWholeMsg() + "<br>" + time;
 
         ((TextView) view.findViewById(R.id.question_reply_text)).setText(Html.fromHtml(msgString));
+        view.setClickable(true); // Replies are never clickable.
     }
 
     @Override

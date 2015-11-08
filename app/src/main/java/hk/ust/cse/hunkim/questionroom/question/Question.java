@@ -27,6 +27,9 @@ public class Question implements Comparable<Question> {
     private int order;
     private boolean newQuestion;
     private Object replies; // This is needed for the "replies" subfolder of every question.
+    private int numberOfReplies;
+
+    public int getNumberOfReplies() { return numberOfReplies; }
 
     public Object getReplies() {
         return replies;
@@ -61,6 +64,7 @@ public class Question implements Comparable<Question> {
         this.echo = 0;
         this.head = title;
         this.desc = message;
+        this.numberOfReplies = 0;
 
         // get the last char
         this.headLastChar = head.substring(head.length() - 1);
