@@ -26,6 +26,11 @@ public class Question implements Comparable<Question> {
     private int echo;
     private int order;
     private boolean newQuestion;
+    private Object replies; // This is needed for the "replies" subfolder of every question.
+
+    public Object getReplies() {
+        return replies;
+    }
 
     public String getDateString() {
         return dateString;

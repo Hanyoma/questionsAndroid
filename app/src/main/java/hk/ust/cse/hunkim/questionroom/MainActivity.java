@@ -42,8 +42,6 @@ public class MainActivity extends ListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("devDebugLog", "MainActivity's onCreate.");
-
         super.onCreate(savedInstanceState);
 
         //initialized once with an Android context.
@@ -91,7 +89,6 @@ public class MainActivity extends ListActivity {
 
     @Override
     public void onStart() {
-        Log.i("devDebugLog", "MainActivity's onStart.");
         super.onStart();
 
         // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
@@ -160,8 +157,6 @@ public class MainActivity extends ListActivity {
     }
     public void postWasClicked(String key)
     {
-        Log.i("devDebugLog", "A post was clicked.");
-
         // Start activity that shows this post alone.
         Intent intent = new Intent(this, ExpandedQuestionActivity.class);
         intent.putExtra(ROOM_NAME, roomName);

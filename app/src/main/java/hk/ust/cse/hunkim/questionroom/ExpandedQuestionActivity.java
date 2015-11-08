@@ -58,7 +58,7 @@ public class ExpandedQuestionActivity extends ListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("devDebugLog", "ExpandedQuestionActivity's onCreate.");
+//        Log.i("devDebugLog", "ExpandedQuestionActivity's onCreate.");
 
         super.onCreate(savedInstanceState);
 
@@ -111,7 +111,7 @@ public class ExpandedQuestionActivity extends ListActivity {
 
     @Override
     public void onStart() {
-        Log.i("devDebugLog", "ExpandedQuestionActivity's onStart.");
+//        Log.i("devDebugLog", "ExpandedQuestionActivity's onStart.");
         super.onStart();
 
 
@@ -131,14 +131,6 @@ public class ExpandedQuestionActivity extends ListActivity {
             }
         });
 
-        Log.i("devDebugLog", "HERE");
-
-
-//        final TextView textView = getTextView();
-//        mainQuestionMsgString += "<B>" + question.getHead() + "</B><br>" + " " + question.getDesc() + "<br>"+ time+"<br>";
-//        mainQuestionMsgString = "just a test.,...";
-//        mainQuestionMsgString = mFirebaseRef.
-//        ((TextView) findViewById(R.id.head_desc)).setText(Html.fromHtml(mainQuestionMsgString));
 
         mFirebaseRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -159,7 +151,7 @@ public class ExpandedQuestionActivity extends ListActivity {
                 */
 
                 thisQuestion.put(dataSnapshot.getKey(), dataSnapshot.getValue());
-                Log.i("devDebugLog", "onChildAdded: " + dataSnapshot.toString());
+//                Log.i("devDebugLog", "onChildAdded: " + dataSnapshot.toString());
 
 
                 // This is too hacky: We know that wholeMsg will be the last element, so then we will have all elements in our thisQuestion hashmap.
@@ -184,73 +176,26 @@ public class ExpandedQuestionActivity extends ListActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.i("devDebugLog", "onChildChanged: " + dataSnapshot.toString() + " -----  " + s);
+//                Log.i("devDebugLog", "onChildChanged: " + dataSnapshot.toString() + " -----  " + s);
                 if (dataSnapshot.getKey().equals("replies")) {
                     handleAddedOrChangedReplies(dataSnapshot);
                 }
-//                // One of the mModels changed. Replace it in our list and name mapping
-//                String modelName = dataSnapshot.getKey();
-//                T oldModel = mModelKeys.get(modelName);
-//                T newModel = dataSnapshot.getValue(FirebaseListAdapter.this.mModelClass);
-//
-//                // TOFIX: Any easy way to ser key?
-//                setKey(modelName, newModel);
-//
-//
-//                int index = mModels.indexOf(oldModel);
-//                mModels.set(index, newModel);
-//
-//
-//                // update map
-//                mModelKeys.put(modelName, newModel);
-//
-//                notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.i("devDebugLog", "onChildRemoved: " + dataSnapshot.toString());
+//                Log.i("devDebugLog", "onChildRemoved: " + dataSnapshot.toString());
                 if (dataSnapshot.getKey().equals("replies")) {
                     handleAddedOrChangedReplies(dataSnapshot);
                 }
-//                // A model was removed from the list. Remove it from our list and the name mapping
-//                String modelName = dataSnapshot.getKey();
-//                T oldModel = mModelKeys.get(modelName);
-//                mModels.remove(oldModel);
-//                mModelKeys.remove(modelName);
-//                notifyDataSetChanged();
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.i("devDebugLog", "onChildMoved: " + dataSnapshot.toString() + " -----  " + previousChildName);
+//                Log.i("devDebugLog", "onChildMoved: " + dataSnapshot.toString() + " -----  " + previousChildName);
                 if (dataSnapshot.getKey().equals("replies")) {
                     handleAddedOrChangedReplies(dataSnapshot);
                 }
-//
-//                // A model changed position in the list. Update our list accordingly
-//                String modelName = dataSnapshot.getKey();
-//                T oldModel = mModelKeys.get(modelName);
-//                T newModel = dataSnapshot.getValue(FirebaseListAdapter.this.mModelClass);
-//
-//                // TOFIX: Any easy way to ser key?
-//                setKey(modelName, newModel);
-//
-//                int index = mModels.indexOf(oldModel);
-//                mModels.remove(index);
-//                if (previousChildName == null) {
-//                    mModels.add(0, newModel);
-//                } else {
-//                    T previousModel = mModelKeys.get(previousChildName);
-//                    int previousIndex = mModels.indexOf(previousModel);
-//                    int nextIndex = previousIndex + 1;
-//                    if (nextIndex == mModels.size()) {
-//                        mModels.add(newModel);
-//                    } else {
-//                        mModels.add(nextIndex, newModel);
-//                    }
-//                }
-//                notifyDataSetChanged();
             }
 
             @Override
@@ -260,27 +205,11 @@ public class ExpandedQuestionActivity extends ListActivity {
         });
 
 
-//        // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
-//        final ListView listView = getListView();
-//        // Tell our list adapter that we only want 200 messages at a time
-//        mChatListAdapter = new QuestionListAdapter(
-//                mFirebaseRef.orderByChild("echo").limitToFirst(200),
-//                this, R.layout.question, roomName);
-//        listView.setAdapter(mChatListAdapter);
-//
-//        mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
-//            @Override
-//            public void onChanged() {
-//                super.onChanged();
-//                listView.setSelection(mChatListAdapter.getCount() - 1);
-//            }
-//        });
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mFirebaseRef.getRoot().child(".info/connected").removeEventListener(mConnectedListener);
         mChatListAdapter.cleanup();
     }
 
@@ -315,7 +244,7 @@ public class ExpandedQuestionActivity extends ListActivity {
         Iterator it = ((Map) dataSnapshot.getValue()).entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-            Log.i("devDebugLog", "handleAddedOrChangedReplies: CURR: " + pair.getKey() + " = " + pair.getValue());
+//            Log.i("devDebugLog", "handleAddedOrChangedReplies: CURR: " + pair.getKey() + " = " + pair.getValue());
             it.remove(); // avoids a ConcurrentModificationException
         }
 
