@@ -249,7 +249,7 @@ public class ExpandedQuestionActivity extends ListActivity {
         EditText replyInput = (EditText) findViewById(R.id.replyInput);
         String replyText = replyInput.getText().toString();
 
-        if (!replyText.equals("") && !replyText.equals("")) { // Only actually submit the question if it has a title and a main text.
+        if (!replyText.equals("")) { // Only actually submit the question if it has a title and a main text.
             // Create corresponding Question object
             QuestionReply questionReply = new QuestionReply(replyText);
 

@@ -197,6 +197,11 @@ public class Question implements Comparable<Question> {
 
     @Override
     public int hashCode() {
+        if (key == null)
+        {
+            return 0;
+        }
+        //else.
         return key.hashCode();
     }
 }
