@@ -83,6 +83,14 @@ public class MainActivity extends ListActivity {
                 sendMessage();
             }
         });
+        findViewById(R.id.pollButton).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                createPoll();
+            }
+        });
 
         // get the DB Helper
         DBHelper mDbHelper = new DBHelper(this);
@@ -209,4 +217,9 @@ public class MainActivity extends ListActivity {
     }
 
     public Firebase getFirebaseRef() {return mFirebaseRef;}
+
+    public void createPoll()
+    {
+
+    }
 }

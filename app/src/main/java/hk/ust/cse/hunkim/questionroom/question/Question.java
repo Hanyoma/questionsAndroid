@@ -41,7 +41,7 @@ public class Question implements Comparable<Question> {
 
     // Required default constructor for Firebase object mapping
     @SuppressWarnings("unused")
-    private Question() {
+    protected Question() {
     }
 
     /**
