@@ -1,6 +1,7 @@
 package hk.ust.cse.hunkim.questionroom.question;
 
 import java.util.Date;
+import java.util.List;
 
 import android.text.Html;
 import android.util.Log;
@@ -8,6 +9,8 @@ import android.util.Log;
 /**
  * Created by hunkim on 7/16/15.
  */
+
+
 public class Question implements Comparable<Question> {
 
     /**
@@ -26,6 +29,8 @@ public class Question implements Comparable<Question> {
     private int echo;
     private int order;
     private boolean newQuestion;
+    protected List<PollQuestion.Poll> pollOptions;
+
 
     public String getDateString() {
         return dateString;
@@ -61,6 +66,8 @@ public class Question implements Comparable<Question> {
         this.headLastChar = head.substring(head.length() - 1);
 
         this.timestamp = new Date().getTime();
+
+        this.pollOptions = null;
 
     }
 
@@ -118,6 +125,8 @@ public class Question implements Comparable<Question> {
     public String getLinkedDesc() {
         return linkedDesc;
     }
+
+    public List<PollQuestion.Poll> getPollOptions() {return pollOptions; }
 
     public boolean isCompleted() {
         return completed;

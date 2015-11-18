@@ -1,5 +1,6 @@
 package hk.ust.cse.hunkim.questionroom;
 
+import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -19,8 +20,13 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import hk.ust.cse.hunkim.questionroom.db.DBHelper;
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
+import hk.ust.cse.hunkim.questionroom.question.CreatePollDialog;
+import hk.ust.cse.hunkim.questionroom.question.PollQuestion;
 import hk.ust.cse.hunkim.questionroom.question.Question;
 
 public class MainActivity extends ListActivity {
@@ -35,6 +41,7 @@ public class MainActivity extends ListActivity {
     private Firebase mFirebaseRef;
     private ValueEventListener mConnectedListener;
     private QuestionListAdapter mChatListAdapter;
+    private PollListAdapter mPollListAdapter;
 
     private DBUtil dbutil;
 
@@ -57,7 +64,7 @@ public class MainActivity extends ListActivity {
         // Make it a bit more reliable
         roomName = intent.getStringExtra(JoinActivity.ROOM_NAME);
         if (roomName == null || roomName.length() == 0) {
-            roomName = "all";
+            roomName = "TEMP";
         }
 
         setTitle("Room name: " + roomName);
@@ -89,6 +96,7 @@ public class MainActivity extends ListActivity {
             public void onClick(View view)
             {
                 createPoll();
+//                Toast.makeText(MainActivity.this, "Yay poll button works", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -220,6 +228,14 @@ public class MainActivity extends ListActivity {
 
     public void createPoll()
     {
+        final DialogFragment pollDialog = new CreatePollDialog() {
+            @Override
+            public void onPositiveButtonClick() {
+                mFirebaseRef.push().setValue(new PollQuestion("test ","test ", pollOptions));
+            }
+        };
+        pollDialog.show(getFragmentManager(), "PollDialogFrag");
 
     }
+
 }

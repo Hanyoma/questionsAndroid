@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import java.util.TimeZone;
 
 
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
+import hk.ust.cse.hunkim.questionroom.question.PollQuestion;
 import hk.ust.cse.hunkim.questionroom.question.Question;
 
 /**
@@ -123,6 +125,13 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
 
         view.setTag(question.getKey());  // store key in the view
+
+        if(question.equals(PollQuestion.class))
+        {
+            ((PollQuestion) question).getPollOptions();
+            Log.d("What", "Found a poll");
+        }
+
     }
 
     @Override
