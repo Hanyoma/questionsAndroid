@@ -5,8 +5,13 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.firebase.client.Query;
@@ -126,10 +131,25 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
         view.setTag(question.getKey());  // store key in the view
 
-        if(question.equals(PollQuestion.class))
+        // If the question is a pollQuestion, there is more work to do...
+        if(question.getPollOptions() != null)
         {
-            ((PollQuestion) question).getPollOptions();
-            Log.d("What", "Found a poll");
+            List<PollQuestion.Poll> pollOptions = question.getPollOptions();
+            LinearLayout pollLayout = (LinearLayout) view.findViewById(R.id.pollLayout);
+            View pollDisplay = LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.poll_display, null);
+            RadioGroup pollRadioGroup = (RadioGroup) pollDisplay.findViewById(R.id.pollRadioGroup);
+            pollLayout.addView(pollDisplay);
+
+            pollRadioGroup.removeAllViews();
+            for(PollQuestion.Poll option : pollOptions)
+            {
+                RadioButton pollChoice = new RadioButton(activity.getApplicationContext());
+                pollChoice.setText(option.getPollString());
+                pollChoice.setTextColor(Color.BLACK);
+                pollRadioGroup.addView(pollChoice);
+            }
+
+
         }
 
     }

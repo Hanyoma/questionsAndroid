@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/close"
         android:layout_above="@+id/listFooter"
-        android:transcriptMode="alwaysScroll" />
+        android:transcriptMode="alwaysScroll"
+        android:nestedScrollingEnabled="false" />
 
 
     <LinearLayout

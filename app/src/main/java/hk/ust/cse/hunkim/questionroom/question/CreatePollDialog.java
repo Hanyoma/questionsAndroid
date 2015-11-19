@@ -30,6 +30,7 @@ public abstract class CreatePollDialog extends DialogFragment {
 
     private ListView userInput;
     public List<String> pollOptions;
+    public String pollTitle;
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -69,6 +70,12 @@ public abstract class CreatePollDialog extends DialogFragment {
 
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        EditText editTitle = (EditText) dialogView.findViewById(R.id.pollTitle);
+                        pollTitle = editTitle.getText().toString();
+                        for (int i = 0; i < userInput.getChildCount(); i++) {
+                            String userOption = pollAdapter.getItem(i).toString();
+                            pollOptions.set(i, userOption);
+                        }
                         onPositiveButtonClick();
                     }
                 })

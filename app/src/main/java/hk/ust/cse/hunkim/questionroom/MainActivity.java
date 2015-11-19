@@ -231,7 +231,7 @@ public class MainActivity extends ListActivity {
         final DialogFragment pollDialog = new CreatePollDialog() {
             @Override
             public void onPositiveButtonClick() {
-                mFirebaseRef.push().setValue(new PollQuestion("test ","test ", pollOptions));
+                mFirebaseRef.push().setValue(new PollQuestion(pollTitle,"test ", pollOptions));
             }
         };
         pollDialog.show(getFragmentManager(), "PollDialogFrag");
