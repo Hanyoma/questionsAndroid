@@ -2,6 +2,7 @@ package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import hk.ust.cse.hunkim.questionroom.question.Question;
  */
 public class PollListAdapter extends ArrayAdapter
 {
-    public PollListAdapter(Context context, int resource, List<String> items)
+    public PollListAdapter(Context context, int resource, List<EditText> items)
     {
         super(context, resource, items);
 
@@ -31,6 +32,7 @@ public class PollListAdapter extends ArrayAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         View cView = convertView;
+        EditText pollEditText ;
 
         if(cView == null)
         {
@@ -38,10 +40,11 @@ public class PollListAdapter extends ArrayAdapter
         }
 
         String pollString = getItem(position).toString();
+        Log.d("Adapter", "Poll String is: " + pollString);
 
         if(pollString != null)
         {
-            EditText pollEditText = (EditText) cView.findViewById(R.id.pollString);
+            pollEditText = (EditText) cView.findViewById(R.id.pollString);
         }
 
         return cView;

@@ -1,4 +1,4 @@
-package hk.ust.cse.hunkim.questionroom.question;
+package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -29,35 +29,41 @@ import hk.ust.cse.hunkim.questionroom.R;
 public abstract class CreatePollDialog extends DialogFragment {
 
     private ListView userInput;
+    private LayoutInflater inflater;
+    private View dialogView;
+    private PollListAdapter pollAdapter;
     public List<String> pollOptions;
+    public List<EditText> pollEditTexts;
     public String pollTitle;
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.create_poll_dialog, null);
+        inflater = getActivity().getLayoutInflater();
+        dialogView = inflater.inflate(R.layout.create_poll_dialog, null);
         userInput = (ListView) dialogView.findViewById(R.id.pollListView);
-
         pollOptions = new ArrayList<String>();
-        final PollListAdapter pollAdapter =
-                new PollListAdapter(getActivity().getApplicationContext(), R.layout.poll_entry, pollOptions );
-
+        pollEditTexts = new ArrayList<EditText>();
+        pollAdapter =
+                new PollListAdapter(getActivity().getApplicationContext(),
+                        R.layout.poll_entry, pollEditTexts);
         userInput.setAdapter(pollAdapter);
 
         // Create 2 blank lines for users to add poll options
-        pollOptions.add("");
-        pollOptions.add("");
+        final EditText userOption1 = new EditText(getActivity().getApplicationContext());
+        final EditText userOption2 = new EditText(getActivity().getApplicationContext());
+        pollEditTexts.add(userOption1);
+        pollEditTexts.add(userOption2);
         pollAdapter.notifyDataSetChanged();
 
         // Button that adds a row to the list view when pressed
-        Button addRow = (Button) dialogView.findViewById(R.id.pollAddRowButton);
+        final Button addRow = (Button) dialogView.findViewById(R.id.pollAddRowButton);
         addRow.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                pollOptions.add("");
-                userInput.requestFocus();
+                EditText userOptionExtra = new EditText(getActivity().getApplicationContext());
+                pollEditTexts.add(userOptionExtra);
                 pollAdapter.notifyDataSetChanged();
             }
 
@@ -70,11 +76,15 @@ public abstract class CreatePollDialog extends DialogFragment {
 
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        //Get the pollTitle for later use.
                         EditText editTitle = (EditText) dialogView.findViewById(R.id.pollTitle);
                         pollTitle = editTitle.getText().toString();
+
+                        // Add each user input option to the pollOptions list.
                         for (int i = 0; i < userInput.getChildCount(); i++) {
-                            String userOption = pollAdapter.getItem(i).toString();
-                            pollOptions.set(i, userOption);
+                            View v = userInput.getChildAt(i);
+                            EditText pollEditInput = (EditText) v.findViewById(R.id.pollString);
+                            pollOptions.add(pollEditInput.getText().toString());
                         }
                         onPositiveButtonClick();
                     }

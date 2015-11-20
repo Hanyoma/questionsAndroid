@@ -5,7 +5,6 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,19 +12,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import hk.ust.cse.hunkim.questionroom.db.DBHelper;
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
-import hk.ust.cse.hunkim.questionroom.question.CreatePollDialog;
 import hk.ust.cse.hunkim.questionroom.question.PollQuestion;
 import hk.ust.cse.hunkim.questionroom.question.Question;
 
@@ -231,7 +225,9 @@ public class MainActivity extends ListActivity {
         final DialogFragment pollDialog = new CreatePollDialog() {
             @Override
             public void onPositiveButtonClick() {
-                mFirebaseRef.push().setValue(new PollQuestion(pollTitle,"test ", pollOptions));
+                //If the user input is valid, create a new PollQuestion and push it to Firebase
+                if(pollTitle != null && pollTitle.length() > 0 && pollOptions.size() >= 2)
+                    mFirebaseRef.push().setValue(new PollQuestion(pollTitle,"test ", pollOptions));
             }
         };
         pollDialog.show(getFragmentManager(), "PollDialogFrag");
