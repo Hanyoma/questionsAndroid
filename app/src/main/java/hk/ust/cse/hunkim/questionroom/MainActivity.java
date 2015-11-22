@@ -50,7 +50,7 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
-        assert (intent != null);
+//        assert (intent != null);
 
         // Make it a bit more reliable
         roomName = intent.getStringExtra(JoinActivity.ROOM_NAME);

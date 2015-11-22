@@ -74,12 +74,12 @@ public class ExpandedQuestionActivity extends ListActivity {
 
         // Get intent
         Intent intent = getIntent();
-        assert (intent != null);
+//        assert (intent != null);
 
         roomName = intent.getStringExtra(MainActivity.ROOM_NAME);
-        if (roomName == null || roomName.length() == 0) {
-            roomName = "all";
-        }
+//        if (roomName == null || roomName.length() == 0) {
+//            roomName = "all";
+//        }
 
         questionKey = intent.getStringExtra(MainActivity.QUESTION_KEY);
 

@@ -84,12 +84,28 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
                 roomNameEditText.requestFocus();
             }
         });
+
+        try {
+            Thread.sleep(5000);
+        }
+        catch (InterruptedException e) {
+
+        }
+
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                roomNameEditText.requestFocus();
+            }
+        });
         //Wait until all events from the MainHandler's queue are processed
         getInstrumentation().waitForIdleSync();
 
         //Send the room name
         getInstrumentation().sendStringSync("all");
         getInstrumentation().waitForIdleSync();
+
+
 
         //Click on the sendToReceiverButton to send the message to ReceiverActivity
         TouchUtils.clickView(this, joinButton);
