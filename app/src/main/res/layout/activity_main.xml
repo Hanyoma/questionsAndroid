@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/close"
         android:layout_above="@+id/listFooter"
-        android:transcriptMode="alwaysScroll" />
+        android:transcriptMode="alwaysScroll"
+        android:nestedScrollingEnabled="false" />
 
 
     <LinearLayout
@@ -73,6 +74,14 @@
 
 
     </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Poll"
+        android:id="@+id/pollButton"
+        android:layout_below="@android:id/list"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>

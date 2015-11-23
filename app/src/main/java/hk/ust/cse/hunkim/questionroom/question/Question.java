@@ -1,6 +1,7 @@
 package hk.ust.cse.hunkim.questionroom.question;
 
 import java.util.Date;
+import java.util.List;
 
 import android.text.Html;
 import android.util.Log;
@@ -8,6 +9,8 @@ import android.util.Log;
 /**
  * Created by hunkim on 7/16/15.
  */
+
+
 public class Question implements Comparable<Question> {
 
     /**
@@ -34,6 +37,8 @@ public class Question implements Comparable<Question> {
     public Object getReplies() {
         return replies;
     }
+    private int totalPollVotes;
+    protected List<PollQuestion.Poll> pollOptions;
 
     public String getDateString() {
         return dateString;
@@ -49,9 +54,8 @@ public class Question implements Comparable<Question> {
 
     // Required default constructor for Firebase object mapping
     @SuppressWarnings("unused")
-    private Question() {
+    protected Question() {
     }
-
     /**
      * Set question from a String message
      * @param message string message
@@ -70,6 +74,9 @@ public class Question implements Comparable<Question> {
         this.headLastChar = head.substring(head.length() - 1);
 
         this.timestamp = new Date().getTime();
+
+        this.pollOptions = null;
+        this.totalPollVotes = 0;
 
     }
 
@@ -128,6 +135,8 @@ public class Question implements Comparable<Question> {
         return linkedDesc;
     }
 
+    public List<PollQuestion.Poll> getPollOptions() {return pollOptions; }
+
     public boolean isCompleted() {
         return completed;
     }
@@ -142,6 +151,16 @@ public class Question implements Comparable<Question> {
 
     public int getOrder() {
         return order;
+    }
+
+    public int getTotalPollVotes() {
+        int total = 0;
+        for(PollQuestion.Poll pollOption : pollOptions)
+        {
+            total += pollOption.getVotes();
+        }
+        totalPollVotes = total;
+        return total;
     }
 
     public boolean isNewQuestion() {

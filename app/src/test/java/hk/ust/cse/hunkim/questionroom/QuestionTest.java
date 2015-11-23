@@ -46,12 +46,19 @@ public class QuestionTest extends TestCase {
         assertEquals("Head", "The title is this", q.getHead());
     }
 
+<<<<<<< HEAD
     @SmallTest
     public void testSanitation() {
+=======
+    public void testSanitation()
+    {
+        String inputTitle = "<h1> Title </h1>";
+        String inputDesc = "and the <p> description </p>";
+>>>>>>> master
         // Checks that new questions inputs are automatically sanitized.
-        Question htmlQ = new Question("<h1> Title </h1>", "and the <p> description </p>");
-        assertEquals("HTMLSanitation", htmlQ.getHead(), Html.escapeHtml("<h1> Title </h1>"));
-        assertEquals("HTMLSanitationDesc", htmlQ.getDesc(), Html.escapeHtml("and the <p> description </p>"));
+        Question htmlQ = new Question(inputTitle, inputDesc);
+        assertEquals("HTMLSanitationTitle", htmlQ.getHead(), Html.escapeHtml(inputTitle));
+        assertEquals("HTMLSanitationDesc", htmlQ.getDesc(), Html.escapeHtml(inputDesc));
     }
 
 
