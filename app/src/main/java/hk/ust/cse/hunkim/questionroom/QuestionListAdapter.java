@@ -194,12 +194,14 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
                     @Override
                     public void onClick(View thisView) {
                         int optionSelected = pollRadioGroup.getCheckedRadioButtonId();
-                        View radioSelected = pollRadioGroup.findViewById(optionSelected);
-                        int radioIndex = pollRadioGroup.indexOfChild(radioSelected);
+                        if(optionSelected != -1) {
+                            View radioSelected = pollRadioGroup.findViewById(optionSelected);
+                            int radioIndex = pollRadioGroup.indexOfChild(radioSelected);
 //                    Log.d("RadioSize", "" + pollRadioGroup.getChildCount());
 //                    Log.d("CheckedId", "" + pollRadioGroup.getCheckedRadioButtonId());
 //                    Log.d("SelectedIndex", "" + radioIndex);
-                        activity.onVoteClick((String) (thisView.getTag()), radioIndex, view);
+                            activity.onVoteClick((String) (thisView.getTag()), radioIndex, view);
+                        }
                     }
                 });
 
