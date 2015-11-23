@@ -150,11 +150,11 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
         view.setTag(question.getKey());  // store key in the view
 
+        LinearLayout pollLayout = (LinearLayout) view.findViewById(R.id.pollLayout);
+        pollLayout.removeAllViews();
         // If the question is a pollQuestion, there is more work to do...
         if(question.getPollOptions() != null ) {
             final List<PollQuestion.Poll> pollOptions = question.getPollOptions();
-            LinearLayout pollLayout = (LinearLayout) view.findViewById(R.id.pollLayout);
-            pollLayout.removeAllViews();
 
             if (polldbUtil.contains(question.getKey() + "poll")) {
                 for (PollQuestion.Poll option : pollOptions) {
@@ -205,6 +205,11 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
 
             }
+
+        }
+        else
+        {
+
         }
     }
 

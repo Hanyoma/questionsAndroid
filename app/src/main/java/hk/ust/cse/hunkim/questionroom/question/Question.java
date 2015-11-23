@@ -155,12 +155,14 @@ public class Question implements Comparable<Question> {
 
     public int getTotalPollVotes() {
         int total = 0;
-        for(PollQuestion.Poll pollOption : pollOptions)
-        {
-            total += pollOption.getVotes();
+        if(pollOptions != null) {
+            for (PollQuestion.Poll pollOption : pollOptions) {
+                total += pollOption.getVotes();
+            }
+            totalPollVotes = total;
+            return total;
         }
-        totalPollVotes = total;
-        return total;
+        return -1;
     }
 
     public boolean isNewQuestion() {

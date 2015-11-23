@@ -247,7 +247,7 @@ public class MainActivity extends ListActivity {
             public void onPositiveButtonClick() {
                 //If the user input is valid, create a new PollQuestion and push it to Firebase
                 if(pollTitle != null && pollTitle.length() > 0 && pollOptions.size() >= 2)
-                    mFirebaseRef.push().setValue(new PollQuestion(pollTitle," ", pollOptions));
+                    mFirebaseRef.push().setValue(new PollQuestion(pollTitle,"", pollOptions));
             }
         };
         pollDialog.show(getFragmentManager(), "PollDialogFrag");
