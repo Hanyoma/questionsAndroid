@@ -50,8 +50,10 @@ public class ExpandedQuestionActivity extends ListActivity {
     private String questionKey;
     private String mainQuestionMsgString;
     private Firebase mFirebaseRef;
+    private Firebase mFirebaseRefTop;
     private ValueEventListener mConnectedListener;
     private QuestionReplyListAdapter mChatListAdapter;
+    private Button echoButton;
 
     private DBUtil dbutil;
 
@@ -87,6 +89,7 @@ public class ExpandedQuestionActivity extends ListActivity {
 
         // Setup our Firebase mFirebaseRef
         mFirebaseRef = new Firebase(FIREBASE_URL).child(roomName).child("questions").child(questionKey);
+        mFirebaseRefTop = new Firebase(FIREBASE_URL).child(roomName).child("questions");
 
         // Setup our input methods. Enter key on the keyboard or pushing the send button
         EditText inputText = (EditText) findViewById(R.id.replyInput);
@@ -170,10 +173,39 @@ public class ExpandedQuestionActivity extends ListActivity {
 
                     // Set the echo value
                     int echo = Integer.parseInt("" + thisQuestion.get("echo")); // Hacky....
-                    Button echoButton = (Button) findViewById(R.id.echo);
+                    echoButton = (Button) findViewById(R.id.echo);
                     echoButton.setText("" + echo);
                     echoButton.setTextColor(Color.BLUE);
 
+                    echoButton.setTag(questionKey); // Set tag for button
+
+                    echoButton.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+//                                    MainActivity m = (MainActivity) view.getContext();
+                                    updateEcho(questionKey);
+                                }
+                            }
+
+                    );
+
+
+                    // check if we already clicked
+                    boolean clickable = !dbutil.contains(questionKey);
+
+                    echoButton.setClickable(clickable);
+                    echoButton.setEnabled(clickable);
+//        view.setClickable(clickable); // If this line is here we cannot click a question anymore to open a post to see the replies.
+
+
+                    // http://stackoverflow.com/questions/8743120/how-to-grey-out-a-button
+                    // grey out our button
+                    if (clickable) {
+                        echoButton.getBackground().setColorFilter(null);
+                    } else {
+                        echoButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+                    }
                     // Make echo button red if already liked
 //                    boolean clickable = !dbutil.contains(question.getKey());
 //
@@ -282,6 +314,68 @@ public class ExpandedQuestionActivity extends ListActivity {
                     }
                 }
         );
+    }
+
+
+    public void updateEcho(String key) {
+        if (dbutil.contains(key)) {
+            Log.e("Dupkey", "Key is already in the DB!");
+            return;
+        }
+
+        final Firebase echoRef = mFirebaseRefTop.child(key).child("echo");
+        echoRef.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        Long echoValue = (Long) dataSnapshot.getValue();
+                        Log.e("Echo update:", "" + echoValue);
+
+                        echoRef.setValue(echoValue + 1);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                }
+        );
+
+        final Firebase orderRef = mFirebaseRefTop.child(key).child("order");
+        orderRef.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Long orderValue = (Long) dataSnapshot.getValue();
+                        Log.e("Order update:", "" + orderValue);
+
+                        orderRef.setValue(orderValue - 1);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                }
+        );
+
+        // Update SQLite DB
+        dbutil.put(key);
+
+        // Increment display by 1
+        // Very unclean to do this here like this, should rather be done via two way data binding from firebase...
+        int echo = Integer.parseInt("" + thisQuestion.get("echo")) + 1; // Hacky....
+        echoButton.setText("" + echo);
+        boolean clickable = !dbutil.contains(questionKey);
+        echoButton.setClickable(clickable);
+        echoButton.setEnabled(clickable);
+
+        if (clickable) {
+            echoButton.getBackground().setColorFilter(null);
+        } else {
+            echoButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+        }
     }
 
     public void Close(View view) {
