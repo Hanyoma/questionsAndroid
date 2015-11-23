@@ -52,7 +52,7 @@ public class QuestionReplyListAdapter extends FirebaseListAdapter<QuestionReply>
 
         String time = formatter.format(questionReply.getTimestamp());
 
-        String msgString = questionReply.getWholeMsg() + "<br>" + time;
+        String msgString = Html.escapeHtml(questionReply.getWholeMsg()) + "<br>" + time;
 
         ((TextView) view.findViewById(R.id.question_reply_text)).setText(Html.fromHtml(msgString));
         view.setClickable(true); // Replies are never clickable.

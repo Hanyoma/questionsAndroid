@@ -103,7 +103,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
             repliesString = " replies";
         }
 
-        msgString += "<B>" + question.getHead() + "</B><br>" + " " + question.getDesc() + "<br>" + time + "<br>" + question.getNumberOfReplies() +  repliesString + "<br>";
+        msgString += "<B>" + Html.escapeHtml(question.getHead()) + "</B><br>" + " " + Html.escapeHtml(question.getDesc()) + "<br>" + time + "<br>" + question.getNumberOfReplies() +  repliesString + "<br>";
 
         ((TextView) view.findViewById(R.id.head_desc)).setText(Html.fromHtml(msgString));
         view.setOnClickListener(new View.OnClickListener() {
