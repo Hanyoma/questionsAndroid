@@ -15,5 +15,6 @@
         android:text="Vote"
         android:id="@+id/voteButton"
         android:layout_gravity="right"
-        android:gravity="right" />
+        android:gravity="right"
+        android:onClick="onVoteClick" />
 </LinearLayout>

@@ -18,6 +18,10 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import hk.ust.cse.hunkim.questionroom.db.DBHelper;
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
 import hk.ust.cse.hunkim.questionroom.question.PollQuestion;
@@ -232,6 +236,44 @@ public class MainActivity extends ListActivity {
         };
         pollDialog.show(getFragmentManager(), "PollDialogFrag");
 
+    }
+
+    public void onVoteClick(String key, final int pollSelectIndex)
+    {
+//        if (dbutil.contains(key)) {
+//            Log.e("Dupkey", "Key is already in the DB!");
+//            return;
+//        }
+
+        final Firebase pollRef = mFirebaseRef.child(key).child("pollOptions");
+        pollRef.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Iterator<DataSnapshot> pollChildren = dataSnapshot.getChildren().iterator();
+                        List<Firebase> optionRefs = new ArrayList<Firebase>();
+                        List<Long> optionVotes = new ArrayList<Long>();
+                        int i = 0;
+                        Log.d("POLLSELECTINDEX", pollSelectIndex + "");
+                        while( pollChildren.hasNext() && i != pollSelectIndex)
+                        {
+                            pollChildren.next();
+                            i++;
+                        }
+                        DataSnapshot choiceRefSS = pollChildren.next().child("votes");
+                        Log.e("Poll update:", "" + pollRef);
+
+                        Firebase choiceRef =  choiceRefSS.getRef();
+                        Long choiceVotes = (Long)choiceRefSS.getValue();
+                        choiceRef.setValue(choiceVotes + 1);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                }
+        );
     }
 
 }

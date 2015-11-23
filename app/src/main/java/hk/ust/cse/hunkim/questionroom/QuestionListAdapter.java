@@ -63,6 +63,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
     @Override
     protected void populateView(View view, Question question) {
         DBUtil dbUtil = activity.getDbutil();
+        MainActivity main;
 
         // Map a Chat object to an entry in our listview
         int echo = question.getEcho();
@@ -134,11 +135,14 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         // If the question is a pollQuestion, there is more work to do...
         if(question.getPollOptions() != null)
         {
-            List<PollQuestion.Poll> pollOptions = question.getPollOptions();
+            final List<PollQuestion.Poll> pollOptions = question.getPollOptions();
             LinearLayout pollLayout = (LinearLayout) view.findViewById(R.id.pollLayout);
             View pollDisplay = LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.poll_display, null);
-            RadioGroup pollRadioGroup = (RadioGroup) pollDisplay.findViewById(R.id.pollRadioGroup);
+            final RadioGroup pollRadioGroup = (RadioGroup) pollDisplay.findViewById(R.id.pollRadioGroup);
+            pollLayout.removeAllViews();
             pollLayout.addView(pollDisplay);
+
+            Button voteButton = (Button) pollDisplay.findViewById(R.id.voteButton);
 
             pollRadioGroup.removeAllViews();
             for(PollQuestion.Poll option : pollOptions)
@@ -148,6 +152,22 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
                 pollChoice.setTextColor(Color.BLACK);
                 pollRadioGroup.addView(pollChoice);
             }
+
+            voteButton.setTag(question.getKey());
+            voteButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view) {
+                    int optionSelected = pollRadioGroup.getCheckedRadioButtonId();
+                    Log.d("RadioSize", "" + pollRadioGroup.getChildCount());
+                    Log.d("CheckedId", "" + pollRadioGroup.getCheckedRadioButtonId());
+                    View radioSelected =  pollRadioGroup.findViewById(optionSelected);
+                    int radioIndex = pollRadioGroup.indexOfChild(radioSelected);
+                    Log.d("SelectedIndex", "" + radioIndex);
+                    activity.onVoteClick((String)(view.getTag()), radioIndex);
+
+                }
+            });
 
 
         }
