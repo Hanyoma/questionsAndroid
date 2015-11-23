@@ -37,6 +37,7 @@ public class PollQuestion extends Question
         {
             votes++;
         }
+
     }
 
     public PollQuestion(String title, String message, List<String> pollStrings)
@@ -50,4 +51,6 @@ public class PollQuestion extends Question
         }
 
     }
+
+
 }

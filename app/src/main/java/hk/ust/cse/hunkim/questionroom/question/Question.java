@@ -29,6 +29,7 @@ public class Question implements Comparable<Question> {
     private int echo;
     private int order;
     private boolean newQuestion;
+    private int totalPollVotes;
     protected List<PollQuestion.Poll> pollOptions;
 
 
@@ -68,6 +69,7 @@ public class Question implements Comparable<Question> {
         this.timestamp = new Date().getTime();
 
         this.pollOptions = null;
+        this.totalPollVotes = 0;
 
     }
 
@@ -142,6 +144,16 @@ public class Question implements Comparable<Question> {
 
     public int getOrder() {
         return order;
+    }
+
+    public int getTotalPollVotes() {
+        int total = 0;
+        for(PollQuestion.Poll pollOption : pollOptions)
+        {
+            total += pollOption.getVotes();
+        }
+        totalPollVotes = total;
+        return total;
     }
 
     public boolean isNewQuestion() {

@@ -84,7 +84,11 @@ public abstract class CreatePollDialog extends DialogFragment {
                         for (int i = 0; i < userInput.getChildCount(); i++) {
                             View v = userInput.getChildAt(i);
                             EditText pollEditInput = (EditText) v.findViewById(R.id.pollString);
-                            pollOptions.add(pollEditInput.getText().toString());
+                            // Only accept user input if its valid (not empty).
+                            if (pollEditInput != null && !pollEditInput.getText().toString().equals(""))
+                            {
+                                pollOptions.add(pollEditInput.getText().toString());
+                            }
                         }
                         onPositiveButtonClick();
                     }
@@ -102,3 +106,4 @@ public abstract class CreatePollDialog extends DialogFragment {
 
     public abstract void onPositiveButtonClick();
 }
+

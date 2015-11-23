@@ -1,20 +1,26 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.firebase.client.Query;
+
+import org.w3c.dom.Text;
 
 import java.util.Collections;
 import java.util.List;
@@ -61,8 +67,9 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
      * @param question An instance representing the current state of a chat message
      */
     @Override
-    protected void populateView(View view, Question question) {
+    protected void populateView(final View view, Question question) {
         DBUtil dbUtil = activity.getDbutil();
+        DBUtil polldbUtil = activity.getPolldbutil();
         MainActivity main;
 
         // Map a Chat object to an entry in our listview
@@ -133,45 +140,61 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         view.setTag(question.getKey());  // store key in the view
 
         // If the question is a pollQuestion, there is more work to do...
-        if(question.getPollOptions() != null)
-        {
+        if(question.getPollOptions() != null ) {
             final List<PollQuestion.Poll> pollOptions = question.getPollOptions();
             LinearLayout pollLayout = (LinearLayout) view.findViewById(R.id.pollLayout);
-            View pollDisplay = LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.poll_display, null);
-            final RadioGroup pollRadioGroup = (RadioGroup) pollDisplay.findViewById(R.id.pollRadioGroup);
             pollLayout.removeAllViews();
-            pollLayout.addView(pollDisplay);
 
-            Button voteButton = (Button) pollDisplay.findViewById(R.id.voteButton);
+            if (polldbUtil.contains(question.getKey() + "poll")) {
+                for (PollQuestion.Poll option : pollOptions) {
+//                    ProgressBar optionProgress = new ProgressBar(activity.getApplicationContext(), null, android.R.attr.progressBarStyleHorizontal);
+//                    optionProgress.setMax(question.getTotalPollVotes());
+//                    optionProgress.setProgress(option.getVotes());
+//                    optionProgress.setContentDescription(option.getPollString());
+//                    pollLayout.addView(optionProgress);
 
-            pollRadioGroup.removeAllViews();
-            for(PollQuestion.Poll option : pollOptions)
-            {
-                RadioButton pollChoice = new RadioButton(activity.getApplicationContext());
-                pollChoice.setText(option.getPollString());
-                pollChoice.setTextColor(Color.BLACK);
-                pollRadioGroup.addView(pollChoice);
-            }
-
-            voteButton.setTag(question.getKey());
-            voteButton.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view) {
-                    int optionSelected = pollRadioGroup.getCheckedRadioButtonId();
-                    Log.d("RadioSize", "" + pollRadioGroup.getChildCount());
-                    Log.d("CheckedId", "" + pollRadioGroup.getCheckedRadioButtonId());
-                    View radioSelected =  pollRadioGroup.findViewById(optionSelected);
-                    int radioIndex = pollRadioGroup.indexOfChild(radioSelected);
-                    Log.d("SelectedIndex", "" + radioIndex);
-                    activity.onVoteClick((String)(view.getTag()), radioIndex);
-
+                    pollLayout.setOrientation(LinearLayout.VERTICAL);
+                    TextView optionProgress = new TextView(activity.getApplicationContext());
+                    optionProgress.setText(option.getPollString() + ": " + option.getVotes());
+                    optionProgress.setTextColor(Color.BLACK);
+                    optionProgress.setGravity(Gravity.RIGHT);
+                    pollLayout.addView(optionProgress);
                 }
-            });
+            } else {
+                View pollDisplay = LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.poll_display, null);
+                final RadioGroup pollRadioGroup = (RadioGroup) pollDisplay.findViewById(R.id.pollRadioGroup);
+                pollLayout.addView(pollDisplay);
+
+                Button voteButton = (Button) pollDisplay.findViewById(R.id.voteButton);
+                boolean pollClickable = !polldbUtil.contains(question.getKey() + "poll");
+                voteButton.setClickable(pollClickable);
+
+                pollRadioGroup.removeAllViews();
+                for (PollQuestion.Poll option : pollOptions) {
+                    RadioButton pollChoice = new RadioButton(activity.getApplicationContext());
+                    pollChoice.setText(option.getPollString());
+                    pollChoice.setTextColor(Color.BLACK);
+                    pollChoice.setBackgroundColor(Color.argb(150, 150, 150, 150));
+                    pollRadioGroup.addView(pollChoice);
+                }
+
+                voteButton.setTag(question.getKey());
+                voteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View thisView) {
+                        int optionSelected = pollRadioGroup.getCheckedRadioButtonId();
+                        View radioSelected = pollRadioGroup.findViewById(optionSelected);
+                        int radioIndex = pollRadioGroup.indexOfChild(radioSelected);
+//                    Log.d("RadioSize", "" + pollRadioGroup.getChildCount());
+//                    Log.d("CheckedId", "" + pollRadioGroup.getCheckedRadioButtonId());
+//                    Log.d("SelectedIndex", "" + radioIndex);
+                        activity.onVoteClick((String) (thisView.getTag()), radioIndex, view);
+                    }
+                });
 
 
+            }
         }
-
     }
 
     @Override

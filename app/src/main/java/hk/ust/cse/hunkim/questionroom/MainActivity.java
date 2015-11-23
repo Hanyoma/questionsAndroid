@@ -7,10 +7,14 @@ import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -42,10 +46,12 @@ public class MainActivity extends ListActivity {
     private PollListAdapter mPollListAdapter;
 
     private DBUtil dbutil;
+    private DBUtil polldbutil;
 
     public DBUtil getDbutil() {
         return dbutil;
     }
+    public DBUtil getPolldbutil() { return polldbutil; }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +107,8 @@ public class MainActivity extends ListActivity {
         // get the DB Helper
         DBHelper mDbHelper = new DBHelper(this);
         dbutil = new DBUtil(mDbHelper);
+        DBHelper mPollDbHelper = new DBHelper(this);
+        polldbutil = new DBUtil(mPollDbHelper);
     }
 
     @Override
@@ -231,19 +239,19 @@ public class MainActivity extends ListActivity {
             public void onPositiveButtonClick() {
                 //If the user input is valid, create a new PollQuestion and push it to Firebase
                 if(pollTitle != null && pollTitle.length() > 0 && pollOptions.size() >= 2)
-                    mFirebaseRef.push().setValue(new PollQuestion(pollTitle,"test ", pollOptions));
+                    mFirebaseRef.push().setValue(new PollQuestion(pollTitle," ", pollOptions));
             }
         };
         pollDialog.show(getFragmentManager(), "PollDialogFrag");
 
     }
 
-    public void onVoteClick(String key, final int pollSelectIndex)
+    public void onVoteClick(final String key, final int pollSelectIndex, final View questionView)
     {
-//        if (dbutil.contains(key)) {
-//            Log.e("Dupkey", "Key is already in the DB!");
-//            return;
-//        }
+        if (polldbutil.contains(key+"poll")) {
+            Log.e("Dupkey", "Key is already in the DB!");
+            return;
+        }
 
         final Firebase pollRef = mFirebaseRef.child(key).child("pollOptions");
         pollRef.addListenerForSingleValueEvent(
@@ -251,29 +259,54 @@ public class MainActivity extends ListActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Iterator<DataSnapshot> pollChildren = dataSnapshot.getChildren().iterator();
-                        List<Firebase> optionRefs = new ArrayList<Firebase>();
+                        List<DataSnapshot> optionRefs = new ArrayList<DataSnapshot>();
                         List<Long> optionVotes = new ArrayList<Long>();
-                        int i = 0;
-                        Log.d("POLLSELECTINDEX", pollSelectIndex + "");
-                        while( pollChildren.hasNext() && i != pollSelectIndex)
-                        {
-                            pollChildren.next();
-                            i++;
-                        }
-                        DataSnapshot choiceRefSS = pollChildren.next().child("votes");
                         Log.e("Poll update:", "" + pollRef);
 
+                        // Iterate through and save all pollOption "vote" snapshots
+                        while( pollChildren.hasNext())
+                        {
+                            optionRefs.add(pollChildren.next());
+                        }
+                        // Get and increment the selected pollOption's vote counter.
+                        DataSnapshot choiceRefSS = optionRefs.get(pollSelectIndex).child("votes");
                         Firebase choiceRef =  choiceRefSS.getRef();
                         Long choiceVotes = (Long)choiceRefSS.getValue();
                         choiceRef.setValue(choiceVotes + 1);
                     }
-
                     @Override
                     public void onCancelled(FirebaseError firebaseError) {
 
                     }
                 }
         );
+        // Add key to the database to prevent duplicate voting.
+        polldbutil.put(key+"poll");
+
     }
+
+//    public void updatePollDisplay(List<DataSnapshot> optionRefs, List<Long> optionVotes, View questionView)
+//    {
+//        LinearLayout pollDisplayArea = (LinearLayout) questionView.findViewById(R.id.pollLayout);
+//        ((ViewGroup) pollDisplayArea.getParent()).removeView(pollDisplayArea);
+//
+//        int totalVotes = 0;
+//        for(Long optionVote : optionVotes)
+//        {
+//            totalVotes += optionVote.intValue();
+//        }
+//        pollDisplayArea.removeAllViews();
+//
+//        Log.d("REMOVE DISPLAY", pollDisplayArea.getChildCount() + "");
+//        for(DataSnapshot optionRef : optionRefs) {
+//            Log.d("SNAP ITERATOR", "IM IN THE LOOP");
+//            ProgressBar optionProgress = new ProgressBar(this);
+//            optionProgress.setMax();
+//            optionProgress.setProgress((int) (long) optionRef.child("votes").getValue());
+//            optionProgress.setContentDescription((String) optionRef.child("pollString").getValue());
+//            pollDisplayArea.addView(optionProgress);
+//        }
+//        Log.d("FINISHED PROGREEBARS", pollDisplayArea.getChildCount()+"");
+//    }
 
 }
